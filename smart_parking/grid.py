@@ -1,54 +1,74 @@
-from PySide6.QtWidgets import QLabel, QGridLayout, QWidget
-from PySide6.QtCore import Qt, QPoint, qDebug
+import mainUI
+from PyQt5.QtGui import QFont
+from manual_playing import ManualPlaying
 
-class CarLabel(QLabel):
-    def __init__(self, car_id, parent=None):
-        super().__init__(parent)
-        self.car_id = car_id
-        self.setText(f"Car {car_id}")
-        # self.setStyleSheet(f"background-color: {'red' if car_id == 1 else 'blue'}; color: white;")
-        self.setStyleSheet(f"background-color: {'white' if car_id == 0 else 'blue'}; color: white;")
-        self.setAlignment(Qt.AlignCenter)
-        self.setFixedSize(100, 100)
-        self.drag_start_position = QPoint()  # Initialize drag_start_position
-
-
-class GridWindow(QWidget):
+class Ui_MainWindow(mainUI.Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Car Grid - Drag and Drop")
-        self.grid_layout = QGridLayout()
+        # self.setupUi()
+        self.ManualPlaying = ManualPlaying(self)
+        self.statusLabel = None
+        
+    def setupUi(self, MainWindow):
+        super().setupUi(MainWindow)
+        self.manual_game()
 
-        self.cars = {}  # 用來追蹤車子的位置
-        self.init_ui()
+    def manual_Answer(self):
+        #美化answer label
+        self.ansLabel.setStyleSheet("background-color: Green; color: white;")
+        self.ansLabel.setFont(QFont("Arial", 12, QFont.Bold))
 
-    def init_ui(self):
-        # moving grid
-        for row in range(3):
-            for col in range(3):
-                empty_label = QLabel()
-                empty_label.setStyleSheet("background-color: gray;")
-                empty_label.setFixedSize(100, 100)
-                self.grid_layout.addWidget(empty_label, row, col)
+        stop = [
+            [4, 1, -1],
+            [-1, -1, 2],
+            [3, -1, 0]
+        ]
+        
+        index = 1
+        for row in range(len(stop)):
+            for col in range(len(stop[row])):
+                label_name = f"label_{index}"   #取得label名字
+                # print(label_name)
+                label = getattr(self, label_name, None) 
+                if label is not None: 
+                    # print("find label");        
+                    if stop[row][col] == -1:
+                        label.setText("")
+                        label.setStyleSheet("background-color: gray;")
+                    elif stop[row][col] == 0:
+                        label.setText("")
+                        label.setStyleSheet("background-color: white;")
+                    else:
+                        label.setText("Car" + str(stop[row][col]))
+                        label.setFont(QFont("Arial", 16, QFont.Bold))
+                        label.setStyleSheet("background-color: blue; color: white;")
+                index += 1
 
-        # add car to the moving grid
+    def manual_game(self):
         start = [
             [2, 3, -1],
             [-1, -1, 0],
             [4, -1, 1]
         ]
+
+        index = 1
         for row in range(len(start)):
             for col in range(len(start[row])):
-                car_id = start[row][col]
-                if car_id != -1 and car_id != 0:  # Only add cars if the value is not -1 (obstacle) and 0 (space)
-                    self.add_car(row, col, car_id)
-                if car_id == 0:
-                    empty_label.setStyleSheet("background-color: lightgray;")
+                button_name = f"pushButton_{index}"  # 取得button名字
+                # print(button_name, index)
+                button = getattr(self, button_name, None)
+                if button is not None: 
+                    if start[row][col] == -1:
+                        button.setText(" ")
+                        button.setStyleSheet("background-color: gray;")
+                    elif start[row][col] == 0:
+                        button.setText("")
+                        button.setStyleSheet("background-color: white;")
+                    else:
+                        button.setText("Car" + str(start[row][col]))
+                        button.setFont(QFont("Arial", 16, QFont.Bold))
+                        button.setStyleSheet("background-color: blue; color: white;")
 
+                    button.clicked.connect(lambda _, b=button: self.ManualPlaying.button_clicked(b)) 
+                index += 1
 
-        self.setLayout(self.grid_layout)
-
-    def add_car(self, row, col, car_id):
-        car_label = CarLabel(car_id)
-        self.grid_layout.addWidget(car_label, row, col)
-        self.cars[car_id] = (row, col)
