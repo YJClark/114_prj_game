@@ -71,13 +71,28 @@ class ManualPlaying:
             car_row, car_col = self.selected_position
             #檢查是否相鄰
             if self.is_adjacent(car_row, car_col, row, col):
-                grid[row][col], grid[car_row][car_col] = grid[car_row][car_col], grid[row][col]     #交換，接下來加stack實作返回按鍵
+                # 交換邏輯
+                grid[row][col], grid[car_row][car_col] = grid[car_row][car_col], grid[row][col]
+
+                # 更新UI，不重新生成按鈕，直接修改按鈕樣式
+                self.update_button(button, car_row, car_col, grid)
+                
+                # 清空選擇
                 self.selected_button = None
                 self.selected_position = None
                 self.update_label_text("You choose nothing!")
-                self.ui.manual_game()  # 更新UI
             else:
                 self.update_label_text("Invalid move!")
+
+    def update_button(self, button: QPushButton, car_row: int, car_col: int, grid):
+        # 更新當前空格按鈕
+        button.setText(self.selected_button.text())
+        button.setStyleSheet(self.selected_button.styleSheet())
+
+        # 更新原來的車輛按鈕
+        original_button = getattr(self.ui, f"pushButton_{car_row * len(grid[0]) + car_col + 1}")
+        original_button.setText("")
+        original_button.setStyleSheet("background-color: white;")
 
     #只能相鄰且不能斜著走
     def is_adjacent(self, car_row: int, car_col: int, row: int, col: int) -> bool: 
