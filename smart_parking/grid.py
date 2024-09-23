@@ -2,6 +2,9 @@ import mainUI
 from PyQt5.QtGui import QFont
 from manual_playing import ManualPlaying
 
+from functools import partial
+
+
 class Ui_MainWindow(mainUI.Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -12,6 +15,7 @@ class Ui_MainWindow(mainUI.Ui_MainWindow):
     def setupUi(self, MainWindow):
         super().setupUi(MainWindow)
         self.manual_game()
+        self.manual_Answer()
 
     def manual_Answer(self):
         #美化answer label
@@ -69,6 +73,8 @@ class Ui_MainWindow(mainUI.Ui_MainWindow):
                         button.setFont(QFont("Arial", 16, QFont.Bold))
                         button.setStyleSheet("background-color: blue; color: white;")
 
-                    button.clicked.connect(lambda _, b=button: self.ManualPlaying.button_clicked(b)) 
+                    # button.clicked.connect(lambda _, b=button: self.ManualPlaying.button_clicked(b)) 
+                    button.clicked.connect(partial(self.ManualPlaying.button_clicked, button)) 
+                    print(f"Connecting to button: {button.text()}")
                 index += 1
 

@@ -10,8 +10,8 @@ ui = grid.Ui_MainWindow()
 # ui = mainUI.Ui_MainWindow()
 ui.setupUi(basewidget)
 
-ui.manual_Answer()
-ui.manual_game()
+# ui.manual_Answer() #放到setUi()
+# ui.manual_game() #拿掉因為會重複呼叫
 
 basewidget.show()
 sys.exit(app.exec_())
