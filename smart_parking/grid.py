@@ -8,10 +8,17 @@ class Ui_MainWindow(mainUI.Ui_MainWindow):
         self.ManualPlaying = ManualPlaying(self)
         self.statusLabel = None
         #之後改讀檔
+        # self.start = [
+        #     [2, 3, -1],
+        #     [-1, -1, 0],
+        #     [4, -1, 1]
+        # ]
+
+#測試終止條件的
         self.start = [
-            [2, 3, -1],
+            [4, 1, -1],
             [-1, -1, 0],
-            [4, -1, 1]
+            [3, -1, 2]
         ]
 
         self.stop = [
@@ -27,6 +34,7 @@ class Ui_MainWindow(mainUI.Ui_MainWindow):
         super().setupUi(MainWindow)
         self.manual_game()
         self.manual_Answer()
+        self.countLabel.setFont(QFont("Arial", 10, QFont.Bold))
 
     def manual_Answer(self):
         #美化answer label
@@ -66,9 +74,11 @@ class Ui_MainWindow(mainUI.Ui_MainWindow):
                 if button is not None: 
                     if self.start[row][col] == -1:
                         button.setText(" ")
+                        button.setFont(QFont("Arial", 16, QFont.Bold))
                         button.setStyleSheet("background-color: gray;")
                     elif self.start[row][col] == 0:
                         button.setText("")
+                        button.setFont(QFont("Arial", 16, QFont.Bold))
                         button.setStyleSheet("background-color: white;")
                     else:
                         button.setText("Car" + str(self.start[row][col]))
@@ -77,5 +87,7 @@ class Ui_MainWindow(mainUI.Ui_MainWindow):
 
                     #button.clicked.connect(partial(self.ManualPlaying.button_clicked, button)) 
                     # print(f"Connecting to button: {button.text()}")
-                    button.clicked.connect(lambda _, b=button, r=row, c=col: self.ManualPlaying.button_clicked(b, r, c, self.start))
+                    button.clicked.connect(
+                        lambda _, b=button, r=row, c=col: self.ManualPlaying.button_clicked(b, r, c, self.start, self.stop)
+                        )
                 index += 1

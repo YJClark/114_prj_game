@@ -308,9 +308,9 @@
    <widget class="QLabel" name="statusLabel">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>30</x>
       <y>140</y>
-      <width>291</width>
+      <width>331</width>
       <height>31</height>
      </rect>
     </property>
@@ -401,17 +401,17 @@
      <string>reset</string>
     </property>
    </widget>
-   <widget class="QLabel" name="swapCount">
+   <widget class="QLabel" name="countLabel">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>10</y>
+      <x>570</x>
+      <y>20</y>
       <width>161</width>
       <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string> Swap Counts:</string>
+     <string> Swap Counts: 0</string>
     </property>
    </widget>
   </widget>

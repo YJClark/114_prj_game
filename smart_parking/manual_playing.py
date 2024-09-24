@@ -1,52 +1,3 @@
-# from PyQt5.QtGui import QFont
-# from PyQt5.QtWidgets import QPushButton
-
-# class ManualPlaying:
-#     def __init__(self, ui):
-#         self.ui = ui
-#         self.selected_button = None #追蹤目前選擇的button
-    
-#     def button_clicked(self, button: QPushButton): 
-#         if self.selected_button == button:  # 如果是同一個按鈕，則取消選擇
-#             print(f"Cancel clicked button {button.text()}!")
-#             self.selected_button = None
-#             self.update_label_text("nothing!")
-#         else:  # 如果是新的按鈕，則選擇該按鈕
-#             print(f"Button {button.text()} is clicked!")
-#             self.selected_button = button
-#             if button.text()== " ":     # 障礙物
-#                 print(f"You choose obstacle!")
-#                 self.update_label_text("obstacle")
-#             elif button.text()=="":     # space
-#                 print(f"You choose space!")
-#                 self.update_label_text("nothing!")
-#             else:
-#                 print(f"You choose {button.text()}!")
-#                 self.update_label_text(button.text())
-                                    
-#     def update_label_text(self, text: str):
-#         self.ui.statusLabel.setText("")
-#         self.ui.statusLabel.setText(f"You choose {text}")
-#         self.ui.statusLabel.setFont(QFont("Arial", 14, QFont.Bold))
-
-# #這裡要做數字交換
-#     def swapping():
-#         pass
-
-# #檢查結束沒
-#     def check_finish():
-#         pass
-
-# #數總共換了幾次
-#     def countSwapping():
-#         pass
-        
-# #空白周圍的格子會閃爍
-#     def hint():
-#         pass
- 
-
-
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QPushButton
 
@@ -55,8 +6,9 @@ class ManualPlaying:
         self.ui = ui
         self.selected_button = None
         self.selected_position = None
+        self.count = 0
     
-    def button_clicked(self, button: QPushButton, row: int, col: int, grid):
+    def button_clicked(self, button: QPushButton, row: int, col: int, grid, stop):
         if grid[row][col] > 0 or grid[row][col] == -1:  # 如果是車輛 或 障礙物
             if self.selected_button == button:  # 再次點擊取消選擇
                 self.selected_button = None
@@ -73,6 +25,7 @@ class ManualPlaying:
             if self.is_adjacent(car_row, car_col, row, col):
                 # 交換邏輯
                 grid[row][col], grid[car_row][car_col] = grid[car_row][car_col], grid[row][col]
+                self.swapCount()    #交換後+1
 
                 # 更新UI，不重新生成按鈕，直接修改按鈕樣式
                 self.update_button(button, car_row, car_col, grid)
@@ -81,6 +34,10 @@ class ManualPlaying:
                 self.selected_button = None
                 self.selected_position = None
                 self.update_label_text("You choose nothing!")
+
+                #檢查結束沒
+                self.check_finish(grid, stop)
+
             else:
                 self.update_label_text("Invalid move!")
 
@@ -102,3 +59,35 @@ class ManualPlaying:
         self.ui.statusLabel.setText("")
         self.ui.statusLabel.setText(text)
         self.ui.statusLabel.setFont(QFont("Arial", 14, QFont.Bold))
+
+    #結束條件
+    def check_finish(self, grid, stop):
+        if all(
+            grid[i][j] == stop[i][j] for i in range(len(grid)) for j in range(len(grid[i])) if stop[i][j] > 0
+        ):
+            self.update_label_text("You've finished the game")
+            self.ui.statusLabel.setStyleSheet("background-color: Red; color: white;")
+            
+            # Disable all buttons to prevent further operations
+            for i in range(len(grid)):
+                for j in range(len(grid[i])):
+                    button_name = f"pushButton_{i * len(grid[i]) + j + 1}"
+                    button = getattr(self.ui, button_name, None)
+                    if button:
+                        button.setEnabled(False)
+
+    #算swap幾次
+    def swapCount(self):
+        self.count += 1
+        self.ui.countLabel.setText(f"Swap Counts: {self.count}")
+        self.ui.countLabel.setFont(QFont("Arial", 10, QFont.Bold))
+
+ #空白周圍的格子會閃爍
+    def hint():
+        pass
+
+    def rewind():
+        pass
+
+    def reset():
+        pass
