@@ -80,7 +80,6 @@ class ManualPlaying:
     def swapCount(self):
         self.count += 1
         self.ui.countLabel.setText(f"Swap Counts: {self.count}")
-        self.ui.countLabel.setFont(QFont("Arial", 10, QFont.Bold))
 
  #空白周圍的格子會閃爍
     def hint():
