@@ -81,12 +81,3 @@ class ManualPlaying:
         self.count += 1
         self.ui.countLabel.setText(f"Swap Counts: {self.count}")
 
- #空白周圍的格子會閃爍
-    def hint():
-        pass
-
-    def rewind():
-        pass
-
-    def reset():
-        pass

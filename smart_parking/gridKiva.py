@@ -14,12 +14,12 @@ class MainDialog(QtWidgets.QDialog, kivaUI.Ui_Dialog):
         self.files = [
             ("./results/model_cargo.txt", 1),
             ("./results/model_robot.txt", 1),
-            ("./results/model_cargo.txt", 10),
-            ("./results/model_robot.txt", 10),
-            ("./results/model_cargo.txt", 19),
-            ("./results/model_robot.txt", 19),
-            ("./results/model_cargo.txt", 28),
-            ("./results/model_robot.txt", 28)
+            ("./results/gd_cargo.txt", 10),
+            ("./results/gd_robot.txt", 10),
+            ("./results/ga_cargo.txt", 19),
+            ("./results/ga_robot.txt", 19),
+            ("./results/pso_cargo.txt", 28),
+            ("./results/pso_robot.txt", 28)
         ]
 
         self.steps = []  # 每個方法的步驟
@@ -79,7 +79,7 @@ class MainDialog(QtWidgets.QDialog, kivaUI.Ui_Dialog):
 
     def start_execution(self):
         for timer in self.timers:
-            timer.start(1000)  # 每個方法每秒更新一步
+            timer.start(750)  # 每個方法每秒更新一步
 
     def update_grid(self, method_idx, initial=False):
         if initial:
